@@ -14,15 +14,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   SelectedImages selectedImages = SelectedImages();
 
-  void pickSingleImage() async {
+  void pickImageFromSource(ImageSource source) async {
     var storageStatus = await Permission.storage.status;
-    if(!storageStatus.isGranted){
+    if (!storageStatus.isGranted) {
       await Permission.storage.request();
     }
-    if(storageStatus.isGranted){
+    if (storageStatus.isGranted) {
       final ImagePicker imagePicker = ImagePicker();
-      final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
-      if(image != null){
+      final XFile? image = await imagePicker.pickImage(source: source);
+      if (image != null) {
         selectedImages.pickedImages.add(image);
         Navigator.push(
           context,
@@ -44,14 +44,16 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             IconButton(
                 onPressed: () {
-                  pickSingleImage();
+                  pickImageFromSource(ImageSource.gallery);
                 },
                 icon: const Icon(
                   Icons.photo,
                   size: 40,
                 )),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  pickImageFromSource(ImageSource.camera);
+                },
                 icon: const Icon(
                   Icons.camera_alt,
                   size: 40,
